@@ -1,0 +1,36 @@
+#!/bin/sh
+# Realiza formateo automático de Python, Terraform y Shell
+
+# Salir inmediatamente si alguna revisión falla
+set -e
+
+echo "🔹 Iniciando hooks pre-commit"
+
+echo "🔹 Verificando formato de Python con Black..."
+black --check .
+
+echo "🔹 Realizando verificaciones con flake8..."
+flake8 .
+
+echo "🔹 Revisando formato de Terraform..."
+terraform fmt -check
+
+echo "🔹 Validando archivos de configuración de Terraform..."
+find iac/ -type d | while read -r dir; do
+  if [ -f "$dir/main.tf" ]; then
+    echo "  🔎 Validando en: $dir"
+    (
+      cd "$dir"
+      terraform init -backend=false -input=false -no-color > /dev/null 2>&1
+      terraform validate
+      terraform fmt -check
+    )
+  fi
+done
+
+echo "🔹 Revisión con shellcheck..."
+find . -type f -name "*.sh" -exec shellcheck {} +
+
+echo "✅ ¡Hooks pre-commit superados!"
+
+exit 0

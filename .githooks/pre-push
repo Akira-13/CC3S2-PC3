@@ -1,0 +1,16 @@
+#!/bin/sh
+# Ejecuta el suite de tests de Python y valida la configuración de Terraform
+
+# Salir inmediatamente si alguna revisión falla
+set -e
+
+if [ -d "./tests" ]; then
+    echo "🔹 Iniciando hooks pre-push"
+    pytest
+else
+    echo "⚠ No se encontraron tests. Se saltea pytest."
+fi
+
+echo "✅ ¡Hooks pre-push superados!"
+
+exit 0

@@ -1,0 +1,15 @@
+#!/bin/sh
+# Revisa que se sigan mensajes de commit convencionales
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+PATTERN="^(feat|fix|refactor|perf|style|test|docs|build|ops|chore|ci|revert)(\(.+\))?: (.+)$"
+
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+  echo "❌ Mensaje de commit inválido."
+  echo "💡 Seguir referencia https://www.conventionalcommits.org/en/v1.0.0/#summary"
+  exit 1
+fi
+
+exit 0
