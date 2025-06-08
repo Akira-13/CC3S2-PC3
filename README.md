@@ -21,6 +21,7 @@ Todos los resultados de los scripts son almacenados en el directorio `reports/` 
 - **scan_checkov.sh**: Ejecuta `checkov` para análisis de configuraciones de Terraform en el directorio `iac/`.
 - **scan_shellcheck.sh**: Ejecuta `shellcheck` para análisis de scripts de shell en `scripts/`.
 - **scan_tflint.sh**: Ejecuta `tflint` sobre los módulos de Terraform en el directorio `iac/`.
+- **run_all_scans.sh**: Ejecuta todos los scripts de escaneo (`scan_bandit.sh`, `scan_checkov.sh`, `scan_shellcheck.sh`, `scan_tflint.sh`) y genera el reporte final con `security_checker.py`.
 
 ## Indicaciones para los desarrolladores
 
