@@ -15,7 +15,6 @@ mkdir -p reports
 # Se recorre cada módulo
 find iac/ -type d | while read -r dir; do
   if [ -f "$dir/main.tf" ]; then
-    echo "  🔎 Escaneando módulo: $dir"
     (
       cd "$dir"
       # Inicializar terraform (por completitud se deshabilita backend en caso tuviera)

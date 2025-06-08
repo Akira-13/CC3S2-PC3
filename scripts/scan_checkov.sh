@@ -9,7 +9,7 @@ cd "$(git rev-parse --show-toplevel)"
 echo "🔹 Iniciando escaneo de código estático con Checkov en iac/..."
 
 # Crea directorio reports/ en raíz si no existe
-mkdir --parents ../reports
+mkdir --parents reports
 
 # Ejecuta checkov en iac/ y guardar salida en formato JSON
 checkov --directory iac/ --output json --output-file-path reports/checkov.json
