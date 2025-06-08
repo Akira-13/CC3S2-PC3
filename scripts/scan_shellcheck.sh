@@ -13,6 +13,6 @@ mkdir -p reports
 
 # Encontrar todos los scripts .sh y escanearlos
 # La salida de shellcheck se encuentra en reports/shellcheck_report.json
-find . -type f -name "*.sh" -print0 | xargs -0 shellcheck --format=json1 > reports/shellcheck_report.json
+find . -type f -name "*.sh" -exec shellcheck --format=json1 {} + > reports/shellcheck_report.json
 
 echo "✅ Escaneo de Shellcheck completado. Resultados guardados en reports/shellcheck_report.json"
