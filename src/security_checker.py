@@ -1,5 +1,6 @@
 import json
 
+# Esta función extrae los errores relacionados con etiquetas obligatorias de TFLint.
 def get_tflint_tag_errors(tflint_file):
     tag_errors = []
 
@@ -15,6 +16,7 @@ def get_tflint_tag_errors(tflint_file):
 
     return tag_errors
 
+# Esta función extrae los problemas de seguridad detectados por Bandit.
 def get_bandit_issues(bandit_file, severity = "HIGH"):
     issues = []
   
@@ -39,6 +41,7 @@ def get_bandit_issues(bandit_file, severity = "HIGH"):
 
     return issues
 
+# Esta función extrae los problemas de seguridad detectados por TFLint.
 def get_tflint_issues(tflint_file):
     rules_violated = []
 
@@ -59,6 +62,8 @@ def get_tflint_issues(tflint_file):
 
     return rules_violated
 
+# Esta función extrae los problemas de Checkov relacionados con etiquetas obligatorias.
+# El filtro cambiará en el sprint 2.
 def get_checkov_missing_tags(findings_file):
     missing_tags_issues = []
     filter = "mandatory tag" # TODO cambiar cuando se implemente el ruleset en el sprint 2
@@ -81,6 +86,7 @@ def get_checkov_missing_tags(findings_file):
 
     return missing_tags_issues
 
+# Genera un informe de seguridad en formato Markdown.
 def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, output_file):
     with open(output_file, 'w') as f:
         f.write("#Security Report\n\n")
