@@ -61,7 +61,7 @@ def get_tflint_issues(tflint_file):
 
 def get_checkov_missing_tags(findings_file):
     missing_tags_issues = []
-    filter = "mandatory tag" # Esto puede ser cambiado en futuras versiones, dependiendo del sprint 2.
+    filter = "mandatory tag" # TODO cambiar cuando se implemente el ruleset en el sprint 2
     with open(findings_file) as f:
         json_checkov = json.load(f)
         failed_checks = json_checkov.get("results", {}).get("failed_checks", [])
@@ -81,11 +81,72 @@ def get_checkov_missing_tags(findings_file):
 
     return missing_tags_issues
 
+def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, output_file):
+    with open(output_file, 'w') as f:
+        f.write("#Security Report\n\n")
+
+        # Listar las vulnerabilidades Bandit
+        f.write("###Bandit - Vulnerabilidades nivel ERROR\n\n")
+        if not bandit_issues:
+            f.write("No se encontraron vulnerabilidades de nivel high.\n")
+        else:
+            for issue in bandit_issues:
+                f.write(f"- **Archivo**: `{issue['file']}` - Línea: {issue['line']} - ID: `{issue['test_id']}`\n\n")
+                f.write(f"  - {issue['issue_text']}\n\n")
+
+        # Listar las reglas violadas halladas con TFLint
+        f.write("### TFLint - Reglas violadas\n\n")
+        if not tflint_issues:
+            f.write("No se encontraron reglas violadas en TFLint.\n\n")
+        else:
+            for rule in tflint_issues:
+                f.write(f"- **Archivo**: `{rule['file']}` - Línea: {rule['line']} - Severidad: `{rule['severity']}`\n")
+                f.write(f"  - **Regla**: `{rule['rule_name']}`\n")
+                f.write(f"  - {rule['message']}\n")
+                f.write(f"  - {rule['description']}\n")
+                if rule['link']:
+                    f.write(f"  - [Ver más]({rule['link']})\n")
+                f.write("\n")
+
+        # Listar específicamente los errores de tags obligatorios
+        f.write("#### Errores de tags obligatorios\n\n")
+        if not tflint_tag_issues:
+            f.write("No se encontraron errores relacionados con tags obligatorios.\n\n")
+        else:
+            for error in tflint_tag_issues:
+                f.write(f"- **Archivo**: `{error['file']}` - Línea: {error['line']}\n")
+                f.write(f"  - {error['message']}\n\n")
+
+        #Listar lo hallado con checkov
+        f.write("## Checkov - Recursos sin etiquetas obligatorias\n\n")
+        if not checkov_missing_tags:
+            f.write(" No se encontraron recursos sin etiquetas obligatorias.\n\n")
+        else:
+            for entry in checkov_missing_tags:
+                f.write(f"- **Archivo**: `{entry['file']}` ({entry['start_line']} - {entry['end_line']})\n")
+                f.write(f"  - Recurso: `{entry['resource']}`\n")
+                f.write(f"  - Severidad: `{entry['severity']}`\n")
+                f.write(f"  - Mensaje: {entry['message']} (Check: `{entry['check_id']}`)\n")
+                if entry['guideline']:
+                    f.write(f"  - [Guía]({entry['guideline']})\n")
+                f.write("\n")
+
+        f.write("---\n")
+
 if __name__ == "__main__":
     tflint_tag_issues = get_tflint_tag_errors("reports/tflint.json")
     tflint_issues = get_tflint_issues("reports/tflint.json")
     bandit_issues = get_bandit_issues("reports/bandit.json")
-    #checkov_missing_tags = get_checkov_missing_tags("reports/checkov.json")
+    checkov_missing_tags = get_checkov_missing_tags("reports/checkov.json")
+
+    generar_security_report(
+        bandit_issues,
+        tflint_tag_issues,
+        tflint_issues,
+        checkov_missing_tags,
+        "reports/security_report.md"
+    )
+
 
 
 
