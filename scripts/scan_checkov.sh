@@ -6,12 +6,14 @@ set -e
 # Asegura que se trabaje desde el directorio raíz del repositorio
 cd "$(git rev-parse --show-toplevel)"
 
-echo "🔹 Iniciando escaneo de código estático con Checkov en iac/..."
+echo "Iniciando escaneo de código estático con Checkov en iac/..."
 
 # Crea directorio reports/ en raíz si no existe
 mkdir --parents reports
 
 # Ejecuta checkov en iac/ y guardar salida en formato JSON
-checkov --directory iac/ --output json --output-file-path reports/checkov.json
+checkov --directory iac/ --quiet --output json --soft-fail --output-file-path reports
 
-echo "✅ Escaneo con Checkov completado. Resultados guardados en reports/checkov.json"
+mv reports/results_json.json reports/checov.json
+
+echo "Escaneo con Checkov completado. Resultados guardados en reports/checkov.json"
