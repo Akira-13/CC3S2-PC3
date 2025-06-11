@@ -1,6 +1,32 @@
 # CC3S2-PC3
 PC3 del curso CC23S2 Desarrollo de Software. Se desarrolló el proyecto 6 - DevSecOps local: Escaneo SAST e IaC Security Checks.
 
+## Requerimientos
+
+- Python 3.x
+- Instalar mediante `pipx` (recomendado para instalar aplicaciones de Python)
+   - `bandit`
+   - `checkov`
+- `tflint`
+- `shellcheck`
+- Terraform
+
+## Utilidades
+
+### Scripts
+
+Todos los resultados de los scripts son almacenados en el directorio `reports/` en formato JSON.
+
+- **scan_bandit.sh**: Ejecuta `bandit` para análisis estático de seguridad sobre los scripts de Python en el directorio `src/`.
+- **scan_checkov.sh**: Ejecuta `checkov` para análisis de configuraciones de Terraform en el directorio `iac/`.
+- **scan_shellcheck.sh**: Ejecuta `shellcheck` para análisis de scripts de shell en `scripts/`.
+- **scan_tflint.sh**: Ejecuta `tflint` sobre los módulos de Terraform en el directorio `iac/`.
+- **run_all_scans.sh**: Ejecuta todos los scripts de escaneo (`scan_bandit.sh`, `scan_checkov.sh`, `scan_shellcheck.sh`, `scan_tflint.sh`) y genera el reporte final con `security_checker.py`.
+
+
+### Source
+- **security_checker.py**: Revisa todos los reportes y genera un archivo markdown con las vulnerabilidades encontradas.
+
 ## Indicaciones para los desarrolladores
 
 ### Issues
