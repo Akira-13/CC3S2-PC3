@@ -18,9 +18,12 @@ bash scripts/scan_bandit.sh
 echo "[SCAN] Escaneo con TFLint iniciado"
 bash scripts/scan_tflint.sh
 
+echo "[PRETTIFY] Formateando archivo JSON TFLint"
+python util/prettify_json.py
+
 echo "[SCAN] Escaneo con Checkov iniciado"
 bash scripts/scan_checkov.sh
 
 # Genera el reporte final ejecutando el script en python
-python3 src/security_checker.py
+python src/security_checker.py
 echo "[REPORT] Reporte final generado"

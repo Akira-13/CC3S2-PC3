@@ -6,8 +6,8 @@ def get_tflint_tag_errors(tflint_file):
 
     with open(tflint_file) as f:
         json_tflint = json.load(f)
-        for entry in json_tflint:
-            if entry["type"] == "ERROR" and ("missing tag" in entry["message"] or "Attribute validation error for tag" in entry["message"]):
+        for entry in json_tflint["issues"]:  
+            if "missing tag" in entry["message"] or "Attribute validation error for tag" in entry["message"]:
                 tag_errors.append({
                     "file": entry["range"]["filename"],
                     "line": entry["range"]["start"]["line"],
@@ -47,17 +47,17 @@ def get_tflint_issues(tflint_file):
 
     with open(tflint_file) as f:
         json_tflint = json.load(f)
-        for entry in json_tflint:
+        for entry in json_tflint["issues"]:
             rule_info = entry.get("rule")
             if rule_info:
                 rules_violated.append({
                     "file": entry["range"]["filename"],
                     "line": entry["range"]["start"]["line"],
-                    "severity": entry["type"],
+                    "severity": rule_info.get("severity", "0"), 
                     "message": entry["message"],
                     "rule_name": rule_info.get("name"),
-                    "description": rule_info.get("description"),
-                    "link": rule_info.get("link")
+                    "description": rule_info.get("description", "N/A"),  
+                    "link": rule_info.get("link", "N/A")  
                 })
 
     return rules_violated
@@ -89,15 +89,15 @@ def get_checkov_missing_tags(findings_file):
 # Genera un informe de seguridad en formato Markdown.
 def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, output_file):
     with open(output_file, 'w') as f:
-        f.write("#Security Report\n\n")
+        f.write("# Security Report\n\n")
 
         # Listar las vulnerabilidades Bandit
-        f.write("###Bandit - Vulnerabilidades nivel ERROR\n\n")
+        f.write("### Bandit - Vulnerabilidades nivel ERROR\n\n")
         if not bandit_issues:
             f.write("No se encontraron vulnerabilidades de nivel high.\n")
         else:
             for issue in bandit_issues:
-                f.write(f"- **Archivo**: `{issue['file']}` - Línea: {issue['line']} - ID: `{issue['test_id']}`\n\n")
+                f.write(f"- **Archivo**: `{issue['file']}` - Linea: {issue['line']} - ID: `{issue['test_id']}`\n\n")
                 f.write(f"  - {issue['issue_text']}\n\n")
 
         # Listar las reglas violadas halladas con TFLint
@@ -106,12 +106,12 @@ def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, che
             f.write("No se encontraron reglas violadas en TFLint.\n\n")
         else:
             for rule in tflint_issues:
-                f.write(f"- **Archivo**: `{rule['file']}` - Línea: {rule['line']} - Severidad: `{rule['severity']}`\n")
+                f.write(f"- **Archivo**: `{rule['file']}` - Linea: {rule['line']} - Severidad: `{rule['severity']}`\n")
                 f.write(f"  - **Regla**: `{rule['rule_name']}`\n")
                 f.write(f"  - {rule['message']}\n")
                 f.write(f"  - {rule['description']}\n")
                 if rule['link']:
-                    f.write(f"  - [Ver más]({rule['link']})\n")
+                    f.write(f"  - [Ver mas]({rule['link']})\n")
                 f.write("\n")
 
         # Listar específicamente los errores de tags obligatorios
@@ -120,7 +120,7 @@ def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, che
             f.write("No se encontraron errores relacionados con tags obligatorios.\n\n")
         else:
             for error in tflint_tag_issues:
-                f.write(f"- **Archivo**: `{error['file']}` - Línea: {error['line']}\n")
+                f.write(f"- **Archivo**: `{error['file']}` - Linea: {error['line']}\n")
                 f.write(f"  - {error['message']}\n\n")
 
         #Listar lo hallado con checkov
@@ -137,11 +137,10 @@ def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, che
                     f.write(f"  - [Guía]({entry['guideline']})\n")
                 f.write("\n")
 
-        f.write("---\n")
 
 if __name__ == "__main__":
-    tflint_tag_issues = get_tflint_tag_errors("reports/tflint.json")
-    tflint_issues = get_tflint_issues("reports/tflint.json")
+    tflint_tag_issues = get_tflint_tag_errors("reports/tflint_iac.json")
+    tflint_issues = get_tflint_issues("reports/tflint_iac.json")
     bandit_issues = get_bandit_issues("reports/bandit.json")
     checkov_missing_tags = get_checkov_missing_tags("reports/checkov.json")
 
@@ -152,9 +151,3 @@ if __name__ == "__main__":
         checkov_missing_tags,
         "reports/security_report.md"
     )
-
-
-
-
-
-
