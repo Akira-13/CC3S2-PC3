@@ -15,3 +15,25 @@ resource "null_resource" "dummy2" {
 resource "null_resource" "dummy3" {
   triggers = local.mandatory_tags
 }
+
+# Recurso dummy temporal que se excluye del chequeo de etiquetas obligatorias y formato
+
+resource "null_resource" "dummy_temp" {
+  #checkov:skip=CKV_CUSTOM_1:Recurso temporal sin etiquetas completas
+  #checkov:skip=CKV_CUSTOM_2:Recurso de prueba sin necesidad de etiquetas formateadas
+  triggers = {
+    Owner = "Ariana-Lopez"
+    Env  = "dev"
+  }
+}
+
+# Recurso dummy con etiquetas mal formateadas que se excluye solo del chequeo de formato
+
+resource "null_resource" "dummy_invalid_format" {
+  #checkov:skip=CKV_CUSTOM_2:Recurso de prueba sin necesidad de etiquetas formateadas
+  triggers = {
+    Name  = "InvalidDummy!"   
+    Owner = "ArianaLopez"       
+    Env   = "DEV"                
+  }
+}
