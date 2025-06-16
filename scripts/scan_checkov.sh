@@ -11,9 +11,9 @@ echo "Iniciando escaneo de código estático con Checkov en iac/..."
 # Crea directorio reports/ en raíz si no existe
 mkdir --parents reports
 
-# Ejecuta checkov en iac/ y guardar salida en formato JSON
-checkov --directory iac/ --quiet --output json --soft-fail --output-file-path reports
+# Ejecuta checkov en iac/ usando reglas personalizadas y guarda la salida en formato JSON
+checkov --directory iac/ --external-checks-dir checkov/ --quiet --output json --soft-fail --output-file-path reports
 
-mv reports/results_json.json reports/checov.json
+mv reports/results_json.json reports/checkov.json
 
 echo "Escaneo con Checkov completado. Resultados guardados en reports/checkov.json"
