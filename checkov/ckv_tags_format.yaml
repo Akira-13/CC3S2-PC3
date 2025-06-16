@@ -1,0 +1,36 @@
+# Información general sobre la regla personalizada
+metadata:
+  name: CKV_CUSTOM_TAG_FORMAT
+  category: CUSTOM_TAG_POLICY
+  id: CKV_CUSTOM_2
+  description: Verifica que las etiquetas obligatorias sigan el formato ^[a-z0-9-]+$
+  severity: MEDIUM
+
+# Lógica de cumplimiento de la regla
+definition:
+  and:
+    # Valida que el atributo triggers.Name cumpla con el formato permitido
+    - cond_type: attribute
+      resource_types:
+        - null_resource
+      attribute: triggers.Name
+      # Operador que verifica si el valor del atributo coincide con una expresión regular
+      operator: regex_match
+      # Expresión regular que define el formato válido
+      value: ^[a-z0-9-]+$
+
+    # Valida que el atributo triggers.Owner cumpla con el formato permitido
+    - cond_type: attribute
+      resource_types:
+        - null_resource
+      attribute: triggers.Owner
+      operator: regex_match
+      value: ^[a-z0-9-]+$
+    
+    # Valida que el atributo triggers.Env cumpla con el formato permitido
+    - cond_type: attribute
+      resource_types:
+        - null_resource
+      attribute: triggers.Env
+      operator: regex_match
+      value: ^[a-z0-9-]+$
