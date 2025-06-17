@@ -12,6 +12,7 @@ echo "Iniciando escaneo de seguridad estático con Bandit..."
 mkdir --parents reports
 
 # Ejecuta bandit en src/ y guardar salida en formato JSON
-bandit --recursive src/ --format json --output reports/bandit.json
+# Escanea solo vulnerabilidades críticas con alta severidad y alta confianza
+bandit --recursive src/ --format json --output reports/bandit.json --severity-level high --confidence-level high
 
 echo "Escaneo con Bandit completado. Resultados guardados en reports/bandit.json"

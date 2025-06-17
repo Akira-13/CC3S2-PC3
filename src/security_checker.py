@@ -78,27 +78,29 @@ def get_tflint_issues(tflint_file):
 # El filtro cambiará en el sprint 2.
 def get_checkov_missing_tags(findings_file):
     missing_tags_issues = []
+
     filter = (
-        "mandatory tag"  # TODO cambiar cuando se implemente el ruleset
+        "mandatory tag"  
     )
+
     with open(findings_file) as f:
         json_checkov = json.load(f)
         failed_checks = json_checkov.get("results", {}).get("failed_checks", [])
 
         for entry in failed_checks:
-            if filter in entry.get("check_name", "").lower():
-                missing_tags_issues.append(
-                    {
-                        "file": entry["file_path"],
-                        "start_line": entry["file_line_range"][0],
-                        "end_line": entry["file_line_range"][1],
-                        "resource": entry["resource"],
-                        "check_id": entry["check_id"],
-                        "severity": entry["severity"],
-                        "message": entry["check_name"],
-                        "guideline": entry["guideline"],
-                    }
-                )
+            # Filtra solo los resultados correspondientes al ruleset personalizado
+            if entry.get("check_id", "").startswith("CKV_CUSTOM"):
+                missing_tags_issues.append({
+                    "file": entry["file_path"],
+                    "start_line": entry["file_line_range"][0],
+                    "end_line": entry["file_line_range"][1],
+                    "resource": entry["resource"],
+                    "check_id": entry["check_id"],
+                    "severity": entry["severity"],
+                    "message": entry["check_name"],
+                    "guideline": entry["guideline"]
+                })
+    
     return missing_tags_issues
 
 
