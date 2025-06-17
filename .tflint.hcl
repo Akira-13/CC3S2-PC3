@@ -4,6 +4,7 @@ plugin "terraform" {
 }
 
 # Plugin personalizado activado
+# Este plugin verifica que los tags sigan un determinado formato regex
 plugin "tflint-ruleset" {
   enabled = true
   version = "0.1.0"
@@ -13,12 +14,12 @@ plugin "tflint-ruleset" {
 
 # Reglas del plugin nativo habilitadas
 
-# Verifica que se declare la versión requerida de Terraform
+# Regla que verifica que se declare la versión requerida de Terraform
 rule "terraform_required_version" {
   enabled = true
 }
 
-# Verifica que se declare el bloque required_providers
+# Regla que verifica que se declare el bloque required_providers
 rule "terraform_required_providers" {
   enabled = true
 }
