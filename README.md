@@ -25,7 +25,20 @@ Todos los resultados de los scripts son almacenados en el directorio `reports/` 
 
 
 ### Source
-- **security_checker.py**: Revisa todos los reportes y genera un archivo markdown con las vulnerabilidades encontradas.
+- **security_checker.py**: Revisa todos los reportes, genera un archivo markdown y un html con las vulnerabilidades encontradas.
+
+### Utils
+
+- **prettify_json.py**: Aplica un formato legible a los archivos JSON generados.
+- **plot_generator.py**: Genera un gráfico de tarta/pie de los archivos JSON generados en el directorio `reports/`.
+
+### Templates
+- **security_report_template.html**: Plantilla usada para generar el dashboard html con la información de todo lo hallado.
+
+### Utils
+
+- **prettify_json.py**: Aplica un formato legible a los archivos JSON generados.
+- **plot_generator.py**: Genera un gráfico de tarta/pie de los archivos JSON generados en el directorio `reports/`.
 
 ## Indicaciones para los desarrolladores
 
