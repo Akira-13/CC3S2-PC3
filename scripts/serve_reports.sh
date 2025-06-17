@@ -8,7 +8,7 @@ set -e
 cd "$(git rev-parse --show-toplevel)"
 
 REPORT_DIR="reports"
-REPORT_FILE="security_report.html"
+REPORT_FILE="dashboard.html"
 PORT=8000
 URL="http://localhost:${PORT}/${REPORT_FILE}"
 
