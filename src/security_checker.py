@@ -1,5 +1,5 @@
 import json
-
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 # Esta función extrae los errores relacionados con etiquetas obligatorias de TFLint.
 def get_tflint_tag_errors(tflint_file):
     tag_errors = []
@@ -87,7 +87,7 @@ def get_checkov_missing_tags(findings_file):
     return missing_tags_issues
 
 # Genera un informe de seguridad en formato Markdown.
-def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, output_file):
+def generate_security_report(bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, output_file):
     with open(output_file, 'w') as f:
         f.write("# Security Report\n\n")
 
@@ -137,6 +137,23 @@ def generar_security_report(bandit_issues, tflint_tag_issues, tflint_issues, che
                     f.write(f"  - [Guía]({entry['guideline']})\n")
                 f.write("\n")
 
+def generate_security_dashboard(bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags):
+    enviroment = Environment(loader=FileSystemLoader('templates'), autoescape=select_autoescape())
+    template = enviroment.get_template('security_report_template.html')
+
+    html_file = template.render(
+        bandit_issues=bandit_issues,
+        tflint_issues=tflint_issues,
+        checkov_issues=checkov_missing_tags,
+        tflint_tag_issues=tflint_tag_issues,
+        svg_file ="reports/summary_chart.svg"
+    )
+
+    output_file = "reports/dashboard.html"
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(html_file)
+    pass
+
 
 if __name__ == "__main__":
     tflint_tag_issues = get_tflint_tag_errors("reports/tflint_iac.json")
@@ -144,10 +161,17 @@ if __name__ == "__main__":
     bandit_issues = get_bandit_issues("reports/bandit.json")
     checkov_missing_tags = get_checkov_missing_tags("reports/checkov.json")
 
-    generar_security_report(
+    generate_security_report(
         bandit_issues,
         tflint_tag_issues,
         tflint_issues,
         checkov_missing_tags,
         "reports/security_report.md"
+    )
+
+    generate_security_dashboard(
+        bandit_issues,
+        tflint_tag_issues,
+        tflint_issues,
+        checkov_missing_tags
     )
