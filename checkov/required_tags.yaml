@@ -1,0 +1,41 @@
+# Información general sobre la regla personalizada
+metadata:
+  # Nombre descriptivo de la regla personalizada
+  name: CKV_CUSTOM_TAGS_REQUIRED
+  # Categoría que agrupa reglas afines
+  category: CUSTOM_TAG_POLICY
+  # Identificador único de la regla
+  id: CKV_CUSTOM_1
+  # Descripción de la validación implementada por esta regla
+  description: "Verificar que los recursos incluyan las etiquetas obligatorias: Name, Owner y Env"
+  # Nivel de severidad asignado cuando la regla no se cumple
+  severity: HIGH
+
+# Lógica de cumplimiento de la regla
+definition:
+  # Todas las condiciones deben cumplirse para que el recurso sea válido
+  and: 
+    # Verifica que el atributo triggers.Name esté presente
+    # Condición que evalúa la existencia de un atributo específico
+    - cond_type: attribute
+      resource_types:
+        # Solo aplica a recursos de tipo null_resource
+        - "null_resource"
+      # Atributo que debe estar presente en el recurso
+      attribute: triggers.Name
+      # Operador que verifica que el atributo exista
+      operator: exists
+
+    # Verifica que el atributo triggers.Owner esté presente
+    - cond_type: attribute
+      resource_types:
+        - "null_resource"
+      attribute: triggers.Owner
+      operator: exists
+
+    # Verifica que el atributo triggers.Env esté presente
+    - cond_type: attribute
+      resource_types:
+        - "null_resource"
+      attribute: triggers.Env
+      operator: exists
