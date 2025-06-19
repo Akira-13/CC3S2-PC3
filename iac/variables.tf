@@ -19,3 +19,10 @@ variable "env" {
     description = "Entorno del recurso"
     default = "dev"
 }
+
+# Sistema operativo del entorno donde se ejecuta Terraform
+variable "os_type" {
+  type        = string
+  description = "Tipo de sistema operativo"
+  default     = "windows"
+}
