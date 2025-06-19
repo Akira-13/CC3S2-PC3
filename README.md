@@ -40,7 +40,6 @@ Todos los resultados de los scripts son almacenados en el directorio `reports/` 
 
 - **prettify_json.py**: Aplica un formato legible a los archivos JSON generados.
 - **plot_generator.py**: Genera un gráfico de tarta/pie de los archivos JSON generados en el directorio `reports/`.
-
 ## Indicaciones para los desarrolladores
 
 ### Issues
