@@ -167,7 +167,7 @@ def generate_security_report(
 
 
 def generate_security_dashboard(
-    bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags
+    bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, graphic_file
 ):
     enviroment = Environment(
         loader=FileSystemLoader("templates"), autoescape=select_autoescape()
@@ -179,7 +179,7 @@ def generate_security_dashboard(
         tflint_issues=tflint_issues,
         checkov_issues=checkov_missing_tags,
         tflint_tag_issues=tflint_tag_issues,
-        svg_file="reports/summary_chart.svg",
+        svg_file=graphic_file,
     )
 
     output_file = "reports/dashboard.html"
@@ -203,5 +203,6 @@ if __name__ == "__main__":
     )
 
     generate_security_dashboard(
-        bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags
+        bandit_issues, tflint_tag_issues, tflint_issues, 
+        checkov_missing_tags, "summary_chart.svg"
     )
