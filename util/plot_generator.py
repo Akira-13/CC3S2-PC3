@@ -48,7 +48,9 @@ def generate_security_report_chart(
 
         # Estraer errores
         try:
-            issue_counts[tool_name] = extractor(data)
+            count = extractor(data)
+            if count > 0:
+                issue_counts[tool_name] = count
         except Exception as e:
             print(f"No se pudo extraer errores de {tool_name}: {e}")
 
