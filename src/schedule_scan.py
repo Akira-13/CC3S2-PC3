@@ -7,6 +7,7 @@ PREVIOUS_REPORT = "reports/prev_security_report.md"
 
 
 def run_scans():
+    # Ejecutar run_all_scans.sh
     print("Ejecutando escaneos...")
     subprocess.run(
         ["bash", "scripts/run_all_scans.sh"],
@@ -17,6 +18,7 @@ def run_scans():
 
 
 def count_vulnerabilities(report_path):
+    # Contar las lineas que empiecen con "- **Archivo**"
     if not os.path.exists(report_path):
         return 0
 
@@ -28,6 +30,7 @@ def count_vulnerabilities(report_path):
 
 
 def notify_difference(prev, current):
+    # Compara número de vulnerabilidades e imprime resultado.
     print(f"Vulnerabilidades anteriores: {prev}")
     print(f"Vulnerabilidades actuales: {current}")
 
@@ -44,6 +47,7 @@ def main():
         print("Encontrado reporte previo. Guardando copia como reporte anterior...")
         os.replace(CURRENT_REPORT, PREVIOUS_REPORT)
     else:
+        # En caso no exista reporte, se limita a generarlo
         print(
             "No se encontró un reporte previo. Se generará uno nuevo por primera vez."
         )
@@ -51,12 +55,15 @@ def main():
     run_scans()
 
     if os.path.exists(PREVIOUS_REPORT):
+        # Compara número de vulnerabalidades entre reporte antiguo y nuevo
         previous = count_vulnerabilities(PREVIOUS_REPORT)
         current = count_vulnerabilities(CURRENT_REPORT)
         notify_difference(previous, current)
     else:
         print("Reporte generado por primera vez. No hay comparación previa.")
-        print("Ejecuta o espera a siguiente ejecución para realizar comparación.")
+        print(
+            "Ejecuta este script o espera a siguiente ejecución para realizar comparación."
+        )
 
 
 if __name__ == "__main__":
@@ -65,6 +72,5 @@ if __name__ == "__main__":
     print("\nPara programar este script diariamente con cron, ejecuta:")
     print("crontab -e")
     print("Y añade una línea como esta:")
-    print(
-        f"0 9 * * * /usr/bin/python3{os.path.abspath(__file__)}"
-    )
+    print(f"0 9 * * * /usr/bin/python3{os.path.abspath(__file__)}")
+    print("Esto ejecuta el script a las 9000 horas todos los días.")
