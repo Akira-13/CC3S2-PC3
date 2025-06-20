@@ -102,7 +102,7 @@
             </tr>
             {% endfor %}
         </table>
-        {% endif %} {% if checkov_missing_tags %}
+        {% endif %} {% if checkov_issues %}
         <h2>Checkov - Errores de tags</h2>
         <table>
             <tr>
@@ -127,6 +127,24 @@
             {% endfor %}
         </table>
         {% endif %}
+        {% if network_issues %}
+        <h2>Configuración de Red - Validaciones</h2>
+        <table>
+            <tr>
+                <th>Archivo</th>
+                <th>Tipo</th>
+                <th>Mensaje</th>
+            </tr>
+            {% for issue in network_issues %}
+            <tr>
+                <td>{{ issue.file }}</td>
+                <td>{{ issue.type }}</td>
+                <td>{{ issue.message }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+
 
         <h2>Gráfico de la cantidad de vulnerabilidades por herramienta</h2>
         <img src="{{ svg_file }}" alt="Gráfico de vulnerabilidades" class="graphic" />
