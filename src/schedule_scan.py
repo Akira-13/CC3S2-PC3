@@ -1,18 +1,19 @@
 import subprocess
 import os
 import re
+os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-CURRENT_REPORT = "reports/security_report.md"
-PREVIOUS_REPORT = "reports/prev_security_report.md"
+CURRENT_REPORT = "reports/scheduled_reports/security_report_scheduled.md"
+PREVIOUS_REPORT = "reports/scheduled_reports/prev_security_report_scheduled.md"
 
 
 def run_scans():
     # Ejecutar run_all_scans.sh
     print("Ejecutando escaneos...")
     subprocess.run(
-        ["bash", "scripts/run_all_scans.sh"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        ["bash", "scripts/run_all_scans_scheduled.sh"],
+        # stdout=subprocess.DEVNULL,
+        # stderr=subprocess.DEVNULL,
         check=True,
     )
 
@@ -72,5 +73,5 @@ if __name__ == "__main__":
     print("\nPara programar este script diariamente con cron, ejecuta:")
     print("crontab -e")
     print("Y añade una línea como esta:")
-    print(f"0 9 * * * /usr/bin/python3{os.path.abspath(__file__)}")
+    print(f"0 9 * * * /usr/bin/python3 {os.path.abspath(__file__)}")
     print("Esto ejecuta el script a las 9000 horas todos los días.")
