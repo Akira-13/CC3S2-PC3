@@ -37,3 +37,24 @@ resource "null_resource" "dummy_invalid_format" {
     Env   = "DEV"                
   }
 }
+
+# Módulo que simula una configuración de red y genera un archivo JSON con sus valores
+module "network_dummy" {
+  source        = "./network_dummy"
+
+  # Nombre lógico de la red simulada
+  network_name  = "test-network"
+
+  # Rango CIDR asignado a la red
+  cidr_block    = "10.0.0.0/16"
+
+  # Puerto abierto para simular acceso
+  from_port     = 22
+  to_port       = 22
+
+  # Nombre del archivo JSON que se generará
+  file_name     = "network_config.json"
+
+  # Tipo de sistema operativo para determinar el comando correcto
+  os_type = var.os_type
+}
