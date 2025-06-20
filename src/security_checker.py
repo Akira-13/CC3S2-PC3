@@ -75,7 +75,6 @@ def get_tflint_issues(tflint_file):
 
 
 # Esta función extrae los problemas de Checkov relacionados con etiquetas obligatorias.
-# El filtro cambiará en el sprint 2.
 def get_checkov_missing_tags(findings_file):
     missing_tags_issues = []
 
@@ -103,10 +102,34 @@ def get_checkov_missing_tags(findings_file):
     
     return missing_tags_issues
 
+# Esta función extrae los problemas detectados en la configuración de red simulada
+def get_network_json_issues(network_report_file):
+    network_issues = []
+
+    with open(network_report_file) as f:
+        report = json.load(f)
+
+        # Procesar los errores reportados 
+        for error in report.get("errores", []):
+            network_issues.append({
+                "file": report.get("archivo_analizado", "unknown"),
+                "type": "error",
+                "message": error
+            })
+
+        # Procesar las advertencias reportadas
+        for warning in report.get("advertencias", []):
+            network_issues.append({
+                "file": report.get("archivo_analizado", "unknown"),
+                "type": "warning",
+                "message": warning
+            })
+
+    return network_issues
 
 # Genera un informe de seguridad en formato Markdown.
 def generate_security_report(
-    bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, output_file
+    bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, network_json_issues, output_file
 ):
     with open(output_file, "w") as f:
         f.write("# Security Report\n\n")
@@ -165,6 +188,14 @@ def generate_security_report(
                     f.write(f"  - [Guía]({entry['guideline']})\n")
                 f.write("\n")
 
+        # Listar los errores y advertencias hallados en la configuración de red
+        f.write("### Configuracion de red local\n\n")
+        if not network_json_issues:
+            f.write(" No se detectaron problemas de configuración de red en network_config.json.\n\n")
+        else:
+            for issue in network_json_issues:
+                f.write(f"- **Archivo**: `{issue['file']}` - Tipo: `{issue['type']}`\n")
+                f.write(f"  - {issue['message']}\n\n")
 
 def generate_security_dashboard(
     bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, graphic_file
@@ -193,12 +224,14 @@ if __name__ == "__main__":
     tflint_issues = get_tflint_issues("reports/tflint_iac.json")
     bandit_issues = get_bandit_issues("reports/bandit.json")
     checkov_missing_tags = get_checkov_missing_tags("reports/checkov.json")
+    network_issues = get_network_json_issues("reports/network_validation_report.json")
 
     generate_security_report(
         bandit_issues,
         tflint_tag_issues,
         tflint_issues,
         checkov_missing_tags,
+        network_issues,
         "reports/security_report.md",
     )
 

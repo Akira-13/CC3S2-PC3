@@ -17,3 +17,8 @@ checkov --directory iac/ --external-checks-dir checkov/ --quiet --output json --
 mv reports/results_json.json reports/checkov.json
 
 echo "Escaneo con Checkov completado. Resultados guardados en reports/checkov.json"
+
+# Ejecuta un script para analizar el archivo JSON de configuración de red
+bash scripts/validate_network_json.sh
+
+echo "Validación de configuración de red completada."
