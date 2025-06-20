@@ -333,6 +333,7 @@ def generate_security_report(
                 f.write(f"- **Archivo**: `{issue['file']}` - Tipo: `{issue['type']}`\n")
                 f.write(f"  - {issue['message']}\n\n")
 
+# Esta función genera un dashboard HTML usando un template.
 def generate_security_dashboard(
     bandit_issues, tflint_tag_issues, tflint_issues, checkov_missing_tags, network_issues, graphic_file
 ):
@@ -374,6 +375,7 @@ def generate_mitigation_manual(detected_ids, output_file="docs/manual_mitigacion
                 f.write(f"- **Ejemplo seguro**:\n```python\n{entry['ej_seguro']}\n```\n")
             f.write("\n")
 
+# Función auxiliar para obtener los identificadores de las vulnerabilidades detectadas
 def get_ids(bandit_issues, tflint_issues, checkov_issues):
     ids = []
     for issue in bandit_issues:
@@ -393,6 +395,7 @@ def get_ids(bandit_issues, tflint_issues, checkov_issues):
                 break  
     return ids
 
+# Función main
 if __name__ == "__main__":
     tflint_tag_issues = get_tflint_tag_errors("reports/tflint_iac.json")
     tflint_issues = get_tflint_issues(["reports/tflint_iac.json", "reports/tflint_network_dummy.json"])
