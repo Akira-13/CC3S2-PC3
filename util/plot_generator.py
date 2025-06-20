@@ -20,12 +20,16 @@ def extract_shellcheck_issues(data):
 def extract_tflint_issues(data):
     return len(data.get("issues", []))
 
+def extract_network_validation_issues(data):
+    return len(data.get("errors", []))
+
 
 TOOLS = {
     "Bandit": ("bandit.json", extract_bandit_issues),
     "Checkov": ("checkov.json", extract_checkov_issues),
     "Shellcheck": ("shellcheck.json", extract_shellcheck_issues),
     "TFLint": ("tflint_iac.json", extract_tflint_issues),
+    "Validación de red": ("validate_network.json", extract_network_validation_issues),
 }
 
 
