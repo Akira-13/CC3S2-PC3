@@ -10,6 +10,7 @@ PC3 del curso CC23S2 Desarrollo de Software. Se desarrolló el proyecto 6 - DevS
 - `tflint`
 - `shellcheck`
 - Terraform
+- Cron (Cualquier implementación)
 
 ## Utilidades
 
@@ -27,6 +28,28 @@ Todos los resultados de los scripts son almacenados en el directorio `reports/` 
 
 ### Source
 - **security_checker.py**: Revisa todos los reportes, genera un archivo markdown y un html con las vulnerabilidades encontradas.
+- **schedule_scan.py**: Ejecuta los scans llamando a `scripts/run_all_scans.sh` y compara la cantidad de errores encontrados en el reporte generado con el reporte anterior de reports. Incluye instrucciones simples para ejecutar el script con `cron` periódicamente.
+
+#### cron
+
+Para programar la ejecución de `schedule_scan.py` periódicamente, se necesita alguna implementación de `cron` instalada en el sistema Linux del usuario. Con `cron` instalado, se debe activar el daemon:
+
+```bash
+$ sudo systemctl enable <implementacion de cron>.service
+$ sudo systemctl start <implementacion de cron>.service
+```
+
+Una vez activado, se agrega una entrada para programar la ejecución de `schedule_scan.py`:
+
+```bash
+$ crontab -e
+```
+
+En el editor que se muestra, agregar una entrada como la siguiente:
+
+```
+0 9 * * * <ruta absoluta a schedule_scan.py>
+```
 
 ### Utils
 
